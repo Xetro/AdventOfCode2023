@@ -5,86 +5,36 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
-	"strings"
 	"unicode"
 )
 
-var possibleCubes map[string]int = map[string]int{
-	"red":   12,
-	"green": 13,
-	"blue":  14,
+type part struct {
+	start  int
+	end    int
+	number int
+}
+
+type symbol struct {
+	start int
+	end   int
+	row   int
 }
 
 func main() {
-	file, err := os.Open("./input")
+	sum := 0
+	text := make([]string, 0, 140)
+
+	file, err := os.Open("../input")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-
-	sum := 0
-
 	for scanner.Scan() {
-		isValid := true
-		text := scanner.Text()
+		line := scanner.Text()
 
-		if text == "" {
-			continue
-		}
-
-		for i := 0; i <= len(text); {
-      if unicode.IsDigit(r) {
-        for n := Min(i+1, len(text)); unicode.IsDigit(text[r+n]); {
-           
-      
-        }
-        
-      
-
-			)
-		}
-
-		for i, r := range text {
-			unicode.IsDigit(r)
-		}
-
-		game := strings.FieldsFunc(text, func(r rune) bool {
-			return r == ':' || r == ';'
-		})
-
-		gameId, _ := strconv.Atoi(strings.Fields(game[0])[1])
-
-		sets := game[1:]
-
-		for _, set := range sets {
-			cubes := strings.FieldsFunc(set, func(r rune) bool {
-				return r == ','
-			})
-
-			for _, cube := range cubes {
-				cubeFields := strings.Fields(cube)
-				count, _ := strconv.Atoi(cubeFields[0])
-				color := cubeFields[1]
-
-				if count > possibleCubes[color] {
-					fmt.Printf("%s %d not valid, max posible %d\n", color, count, possibleCubes[color])
-					isValid = false
-					break
-				}
-			}
-
-			if !isValid {
-				fmt.Println("Not adding to total")
-				break
-			}
-		}
-
-		if isValid {
-			sum += gameId
-			fmt.Println("Adding", gameId, "to new total", sum)
+		if line != "" {
+			text = append(text, line)
 		}
 	}
 
@@ -92,5 +42,68 @@ func main() {
 		log.Fatal(err)
 	}
 
+	file.Close()
+
+	parts := make([][]part, len(text))
+	symbols := make([]symbol, 0)
+
+	for row, line := range text {
+
+		p := part{
+			start:  -1,
+			end:    0,
+			number: 0,
+		}
+
+		for i, r := range line {
+			switch {
+			case !unicode.IsDigit(r) && r != '.':
+				s := symbol{
+					start: max(0, i-1),
+					end:   min(len(line), i+1),
+					row:   row,
+				}
+				symbols = append(symbols, s)
+
+				if p.start != -1 {
+					p.end = i - 1
+					parts[row] = append(parts[row], p)
+					p = part{
+						start:  -1,
+						end:    0,
+						number: 0,
+					}
+				}
+			case unicode.IsDigit(r):
+				if p.start == -1 {
+					p.start = i
+				}
+				p.number = (p.number * 10) + int(r-'0')
+
+			case p.start != -1:
+				p.end = i - 1
+				parts[row] = append(parts[row], p)
+				p = part{
+					start:  -1,
+					end:    0,
+					number: 0,
+				}
+			}
+		}
+		if p.start != -1 {
+			p.end = len(line)
+			parts[row] = append(parts[row], p)
+		}
+	}
+
+	for _, s := range symbols {
+		for _, partsRow := range parts[max(0, s.row-1):min(len(parts), s.row+2)] {
+			for _, p := range partsRow {
+				if p.start <= s.end && p.end >= s.start {
+					sum += p.number
+				}
+			}
+		}
+	}
 	fmt.Println("Sum of Ids: ", sum)
 }
