@@ -20,12 +20,10 @@ func traverse(hits int, card int) int {
 	count := 1
 	for i := 1; i <= hits; i++ {
 		next := card + i
-		if next < len(cards) {
-			if _, ok := winningsPerCard[next]; !ok {
-				count += traverse(cards[next], next)
-			} else {
-				count += winningsPerCard[next]
-			}
+		if _, ok := winningsPerCard[next]; !ok {
+			count += traverse(cards[next], next)
+		} else {
+			count += winningsPerCard[next]
 		}
 	}
 	winningsPerCard[card] = count
