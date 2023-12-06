@@ -28,7 +28,7 @@ func main() {
 		}
 
 		picked := make(map[string]bool, 8)
-		points := 0
+		hits := 0
 
 		fmt.Println("text: ", text)
 		tokens := strings.FieldsFunc(text, func(r rune) bool {
@@ -41,14 +41,13 @@ func main() {
 
 		for _, s := range strings.Fields(tokens[1]) {
 			if _, ok := picked[s]; ok {
-				if points == 0 {
-					points = 1
-				} else {
-					points = points << 1
-				}
+				hits++
 			}
 		}
-		sum += points
+
+		if hits > 0 {
+			sum += 1 << (hits - 1)
+		}
 	}
 
 	if err := scanner.Err(); err != nil {
