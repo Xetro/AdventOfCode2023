@@ -1,0 +1,26 @@
+goos: linux
+goarch: amd64
+pkg: aoc2023/day6
+cpu: AMD Ryzen 9 5900X 12-Core Processor            
+BenchmarkRaceFromEnd-24    	       7	 147227487 ns/op
+BenchmarkRaceFromEnd-24    	       7	 147250506 ns/op
+BenchmarkRaceFromEnd-24    	       7	 148017397 ns/op
+BenchmarkRaceFromEnd-24    	       7	 145285236 ns/op
+BenchmarkRaceFromEnd-24    	       7	 147519250 ns/op
+BenchmarkRaceFromEnd-24    	       7	 144270127 ns/op
+BenchmarkRaceFromEnd-24    	       7	 144301837 ns/op
+BenchmarkRaceFromEnd-24    	       7	 152077864 ns/op
+BenchmarkRaceFromEnd-24    	       7	 144648865 ns/op
+BenchmarkRaceFromEnd-24    	       7	 151287108 ns/op
+BenchmarkBinaryRace-24     	12493822	        95.89 ns/op
+BenchmarkBinaryRace-24     	12610026	        98.03 ns/op
+BenchmarkBinaryRace-24     	12227392	        95.66 ns/op
+BenchmarkBinaryRace-24     	12625204	        95.59 ns/op
+BenchmarkBinaryRace-24     	12549682	        95.24 ns/op
+BenchmarkBinaryRace-24     	12543072	        96.33 ns/op
+BenchmarkBinaryRace-24     	12585309	        95.82 ns/op
+BenchmarkBinaryRace-24     	12325116	        95.27 ns/op
+BenchmarkBinaryRace-24     	12536242	        95.32 ns/op
+BenchmarkBinaryRace-24     	12566703	        95.42 ns/op
+PASS
+ok  	aoc2023/day6	48.263s
